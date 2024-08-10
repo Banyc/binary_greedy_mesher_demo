@@ -1,17 +1,13 @@
-use std::{sync::Arc, time::Instant};
+use std::sync::Arc;
 
-use bevy::{math::IVec3, utils::HashMap};
-use criterion::{criterion_group, criterion_main, BatchSize, Criterion};
+use criterion::{criterion_group, criterion_main, Criterion};
 use new_voxel_testing::{
     chunk::ChunkData,
     chunks_refs::ChunksRefs,
-    culled_mesher, culled_mesher_optimized, greedy_mesher, greedy_mesher_optimized,
+    culled_mesher, greedy_mesher, greedy_mesher_optimized,
     lod::Lod,
-    utils::{index_to_ivec3, index_to_ivec3_bounds},
     voxel::{BlockData, BlockType},
 };
-use rand::{Rng, SeedableRng};
-use rand_chacha::ChaCha8Rng;
 
 fn bench_mesh(chunks_refs: ChunksRefs) {
     greedy_mesher::build_chunk_mesh(chunks_refs, Lod::L32);
@@ -89,12 +85,12 @@ fn criterion_benchmark(c: &mut Criterion) {
     // });
     c.bench_function("CULLED meshing: 1 chunk [ao]", |b| {
         let mut s = 0;
-        b.iter_with_setup(|| make_chunks_refs(&mut s), |i| culled_mesh_ao(i))
+        b.iter_with_setup(|| make_chunks_refs(&mut s), culled_mesh_ao)
     });
 
     c.bench_function("GREEDY meshing OPTIMIZED: 1 chunk [ao]", |b| {
         let mut s = 0;
-        b.iter_with_setup(|| make_chunks_refs(&mut s), |i| binary_mesh_optimized(i))
+        b.iter_with_setup(|| make_chunks_refs(&mut s), binary_mesh_optimized)
     });
     // c.bench_function("GREEDY meshing OPTIMIZED: 1 chunk [ao] FILLED", |b| {
     //     b.iter_with_setup(|| make_filled(), |i| binary_mesh_optimized(i))

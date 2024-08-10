@@ -2,20 +2,19 @@ use std::f32::consts::PI;
 
 use bevy::{
     core::TaskPoolThreadAssignmentPolicy,
-    math::{ivec3, vec3},
-    pbr::{wireframe::WireframePlugin, CascadeShadowConfigBuilder, ShadowFilteringMethod},
+    math::ivec3,
+    pbr::CascadeShadowConfigBuilder,
     prelude::*,
     render::{
         settings::{RenderCreation, WgpuFeatures, WgpuSettings},
         RenderPlugin,
     },
 };
-
+use bevy_flycam::prelude::*;
 use bevy_inspector_egui::quick::{AssetInspectorPlugin, WorldInspectorPlugin};
 use bevy_screen_diagnostics::{
     ScreenDiagnosticsPlugin, ScreenEntityDiagnosticsPlugin, ScreenFrameDiagnosticsPlugin,
 };
-
 use new_voxel_testing::{
     rendering::{
         ChunkMaterial, ChunkMaterialWireframe, GlobalChunkMaterial, GlobalChunkWireframeMaterial,
@@ -27,8 +26,6 @@ use new_voxel_testing::{
     voxel::*,
     voxel_engine::{ChunkModification, VoxelEngine, VoxelEnginePlugin},
 };
-
-use bevy_flycam::prelude::*;
 use rand::Rng;
 
 fn main() {
@@ -161,8 +158,8 @@ pub fn setup(
 
     // circular base in origin
     commands.spawn(PbrBundle {
-        mesh: meshes.add(shape::Circle::new(22.0)),
-        material: materials.add(Color::GREEN),
+        mesh: meshes.add(Circle::new(22.0)),
+        material: materials.add(Color::LinearRgba(LinearRgba::GREEN)),
         transform: Transform::from_rotation(Quat::from_rotation_x(-std::f32::consts::FRAC_PI_2)),
         ..default()
     });

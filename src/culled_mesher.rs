@@ -32,7 +32,7 @@ pub fn build_chunk_mesh_no_ao(chunks_refs: ChunksRefs, _lod: Lod) -> Option<Chun
                         &mut mesh,
                         Direction::Left,
                         local,
-                        Color::GREEN,
+                        Color::LinearRgba(LinearRgba::GREEN),
                         current.block_type as u32,
                     );
                 }
@@ -41,7 +41,7 @@ pub fn build_chunk_mesh_no_ao(chunks_refs: ChunksRefs, _lod: Lod) -> Option<Chun
                         &mut mesh,
                         Direction::Back,
                         local,
-                        Color::GREEN,
+                        Color::LinearRgba(LinearRgba::GREEN),
                         current.block_type as u32,
                     );
                 }
@@ -50,7 +50,7 @@ pub fn build_chunk_mesh_no_ao(chunks_refs: ChunksRefs, _lod: Lod) -> Option<Chun
                         &mut mesh,
                         Direction::Down,
                         local,
-                        Color::GREEN,
+                        Color::LinearRgba(LinearRgba::GREEN),
                         current.block_type as u32,
                     );
                 }
@@ -61,7 +61,7 @@ pub fn build_chunk_mesh_no_ao(chunks_refs: ChunksRefs, _lod: Lod) -> Option<Chun
                         &mut mesh,
                         Direction::Right,
                         local,
-                        Color::GREEN,
+                        Color::LinearRgba(LinearRgba::GREEN),
                         left.block_type as u32,
                     );
                 }
@@ -70,7 +70,7 @@ pub fn build_chunk_mesh_no_ao(chunks_refs: ChunksRefs, _lod: Lod) -> Option<Chun
                         &mut mesh,
                         Direction::Forward,
                         local,
-                        Color::GREEN,
+                        Color::LinearRgba(LinearRgba::GREEN),
                         back.block_type as u32,
                     );
                 }
@@ -79,7 +79,7 @@ pub fn build_chunk_mesh_no_ao(chunks_refs: ChunksRefs, _lod: Lod) -> Option<Chun
                         &mut mesh,
                         Direction::Up,
                         local,
-                        Color::GREEN,
+                        Color::LinearRgba(LinearRgba::GREEN),
                         down.block_type as u32,
                     );
                 }
@@ -94,7 +94,7 @@ pub fn build_chunk_mesh_no_ao(chunks_refs: ChunksRefs, _lod: Lod) -> Option<Chun
     }
 }
 
-///! helper for fetching voxels that will contribute to the current voxels ao value
+/// helper for fetching voxels that will contribute to the current voxels ao value
 pub fn ambient_corner_voxels(
     chunks_refs: &ChunksRefs,
     direction: Direction,
@@ -157,7 +157,7 @@ pub fn build_chunk_mesh_ao(chunks_refs: &ChunksRefs, _lod: Lod) -> Option<ChunkM
                         &mut mesh,
                         Direction::Left,
                         local,
-                        Color::GREEN,
+                        Color::LinearRgba(LinearRgba::GREEN),
                         current.block_type as u32,
                     );
                 }
@@ -167,7 +167,7 @@ pub fn build_chunk_mesh_ao(chunks_refs: &ChunksRefs, _lod: Lod) -> Option<ChunkM
                         &mut mesh,
                         Direction::Back,
                         local,
-                        Color::GREEN,
+                        Color::LinearRgba(LinearRgba::GREEN),
                         current.block_type as u32,
                     );
                 }
@@ -177,7 +177,7 @@ pub fn build_chunk_mesh_ao(chunks_refs: &ChunksRefs, _lod: Lod) -> Option<ChunkM
                         &mut mesh,
                         Direction::Down,
                         local,
-                        Color::GREEN,
+                        Color::LinearRgba(LinearRgba::GREEN),
                         current.block_type as u32,
                     );
                 }
@@ -189,7 +189,7 @@ pub fn build_chunk_mesh_ao(chunks_refs: &ChunksRefs, _lod: Lod) -> Option<ChunkM
                         &mut mesh,
                         Direction::Right,
                         local,
-                        Color::GREEN,
+                        Color::LinearRgba(LinearRgba::GREEN),
                         left.block_type as u32,
                     );
                 }
@@ -199,7 +199,7 @@ pub fn build_chunk_mesh_ao(chunks_refs: &ChunksRefs, _lod: Lod) -> Option<ChunkM
                         &mut mesh,
                         Direction::Forward,
                         local,
-                        Color::GREEN,
+                        Color::LinearRgba(LinearRgba::GREEN),
                         back.block_type as u32,
                     );
                 }
@@ -209,7 +209,7 @@ pub fn build_chunk_mesh_ao(chunks_refs: &ChunksRefs, _lod: Lod) -> Option<ChunkM
                         &mut mesh,
                         Direction::Up,
                         local,
-                        Color::GREEN,
+                        Color::LinearRgba(LinearRgba::GREEN),
                         down.block_type as u32,
                     );
                 }
@@ -232,7 +232,7 @@ fn push_face_ao(
     color: Color,
     block_type: u32,
 ) {
-    let ambient_corners = ambient_corner_voxels(&chunks_refs, dir, vpos);
+    let ambient_corners = ambient_corner_voxels(chunks_refs, dir, vpos);
     let quad = Quad::from_direction(dir, vpos, color);
     for (i, corner) in quad.corners.into_iter().enumerate() {
         let index = i * 2;

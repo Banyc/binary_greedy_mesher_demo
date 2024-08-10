@@ -7,17 +7,17 @@
 
 use std::collections::VecDeque;
 
-use bevy::{math::ivec3, prelude::*};
+use bevy::prelude::*;
 
 use crate::{
     chunk_mesh::ChunkMesh,
     chunks_refs::ChunksRefs,
     lod::Lod,
     quad::{Direction, Quad},
-    utils::{generate_indices, index_to_ivec3, is_on_edge, make_vertex_u32},
+    utils::{generate_indices, index_to_ivec3, make_vertex_u32},
 };
 
-// construct vertices for a face in provided direciton
+// construct vertices for a face in provided direction
 fn push_face(
     mesh: &mut ChunkMesh,
     dir: Direction,
@@ -51,7 +51,7 @@ fn push_face(
     }
 }
 
-pub fn build_chunk_mesh(chunks_refs: ChunksRefs, lod: Lod) -> Option<ChunkMesh> {
+pub fn build_chunk_mesh(chunks_refs: ChunksRefs, _lod: Lod) -> Option<ChunkMesh> {
     let mut mesh = ChunkMesh::default();
     // estimate if chunk is mostly solid or air
     let most_solid = chunks_refs
@@ -89,7 +89,7 @@ pub fn build_chunk_mesh(chunks_refs: ChunksRefs, lod: Lod) -> Option<ChunkMesh> 
                     &mut mesh,
                     *dir,
                     local,
-                    Color::GREEN,
+                    Color::LinearRgba(LinearRgba::GREEN),
                     block as u32,
                     flip_winding_order,
                 );

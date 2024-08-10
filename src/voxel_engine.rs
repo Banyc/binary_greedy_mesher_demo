@@ -84,7 +84,7 @@ pub enum MeshingMethod {
     BinaryGreedyMeshing,
 }
 
-///! holds all voxel world data
+/// holds all voxel world data
 #[derive(Resource)]
 pub struct VoxelEngine {
     pub world_data: HashMap<IVec3, Arc<ChunkData>>,
@@ -169,7 +169,7 @@ fn diagnostics_count(mut diagnostics: Diagnostics, voxel_engine: Res<VoxelEngine
 
 impl VoxelEngine {
     pub fn unload_all_meshes(&mut self, scanner: &Scanner, scanner_transform: &GlobalTransform) {
-        // stop all any current proccessing
+        // stop all any current processing
         self.load_mesh_queue.clear();
         // self.unload_mesh_queue.clear();
         self.mesh_tasks.clear();
@@ -204,7 +204,7 @@ impl Default for VoxelEngine {
     }
 }
 
-///! begin data building tasks for chunks in range
+/// begin data building tasks for chunks in range
 pub fn start_data_tasks(
     mut voxel_engine: ResMut<VoxelEngine>,
     scanners: Query<&GlobalTransform, With<Scanner>>,
@@ -231,15 +231,12 @@ pub fn start_data_tasks(
         // for world_pos in load_data_queue.drain(0..MAX_DATA_TASKS.min(load_data_queue.len())) {
         // for world_pos in load_data_queue.drain(..) {
         let k = world_pos;
-        let task = task_pool.spawn(async move {
-            let cd = ChunkData::generate(k);
-            cd
-        });
+        let task = task_pool.spawn(async move { ChunkData::generate(k) });
         data_tasks.insert(world_pos, Some(task));
     }
 }
 
-///! destroy enqueued, chunk data
+/// destroy enqueued, chunk data
 pub fn unload_data(mut voxel_engine: ResMut<VoxelEngine>) {
     let VoxelEngine {
         unload_data_queue,
@@ -251,7 +248,7 @@ pub fn unload_data(mut voxel_engine: ResMut<VoxelEngine>) {
     }
 }
 
-///! destroy enqueued, chunk mesh entities
+/// destroy enqueued, chunk mesh entities
 pub fn unload_mesh(mut commands: Commands, mut voxel_engine: ResMut<VoxelEngine>) {
     let VoxelEngine {
         unload_mesh_queue,
@@ -273,7 +270,7 @@ pub fn unload_mesh(mut commands: Commands, mut voxel_engine: ResMut<VoxelEngine>
     unload_mesh_queue.append(&mut retry);
 }
 
-///! begin mesh building tasks for chunks in range
+/// begin mesh building tasks for chunks in range
 pub fn start_mesh_tasks(
     mut voxel_engine: ResMut<VoxelEngine>,
     scanners: Query<&GlobalTransform, With<Scanner>>,
@@ -355,7 +352,7 @@ pub fn start_modifications(mut voxel_engine: ResMut<VoxelEngine>) {
     }
 }
 
-///! join the chunkdata threads
+/// join the chunkdata threads
 pub fn join_data(mut voxel_engine: ResMut<VoxelEngine>) {
     let VoxelEngine {
         world_data,
@@ -390,11 +387,11 @@ pub fn promote_dirty_meshes(
     for (entity, handle, parent) in children.iter() {
         if let Some(state) = asset_server.get_load_state(handle) {
             match state {
-                LoadState::Loaded | LoadState::Failed => {
+                LoadState::Loaded | LoadState::Failed(_) => {
                     let Ok(mut parent_handle) = parents.get_mut(parent.get()) else {
                         continue;
                     };
-                    info!("updgraded!");
+                    info!("upgraded!");
                     *parent_handle = handle.clone();
                     commands.entity(entity).despawn();
                 }
@@ -407,7 +404,7 @@ pub fn promote_dirty_meshes(
     }
 }
 
-///! join the multithreaded chunk mesh tasks, and construct a finalized chunk entity
+/// join the multithreaded chunk mesh tasks, and construct a finalized chunk entity
 pub fn join_mesh(
     mut voxel_engine: ResMut<VoxelEngine>,
     mut commands: Commands,
@@ -422,7 +419,7 @@ pub fn join_mesh(
     } = voxel_engine.as_mut();
     for (world_pos, task_option) in mesh_tasks.iter_mut() {
         let Some(mut task) = task_option.take() else {
-            // should never happend, because we drop None values later
+            // should never happened, because we drop None values later
             warn!("someone modified task?");
             continue;
         };
@@ -442,7 +439,7 @@ pub fn join_mesh(
         vertex_diagnostic.insert(*world_pos, mesh.vertices.len() as i32);
         bevy_mesh.insert_attribute(ATTRIBUTE_VOXEL, mesh.vertices.clone());
         // bevy_mesh.set_indices(Some(Indices::U32(mesh.indices.clone().into())));
-        bevy_mesh.insert_indices(Indices::U32(mesh.indices.clone().into()));
+        bevy_mesh.insert_indices(Indices::U32(mesh.indices.clone()));
         let mesh_handle = meshes.add(bevy_mesh);
 
         if let Some(entity) = chunk_entities.get(world_pos) {

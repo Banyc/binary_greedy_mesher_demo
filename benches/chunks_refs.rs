@@ -43,15 +43,12 @@ fn iter_vec(data: Vec<BlockData>) {
 
 fn criterion_benchmark(c: &mut Criterion) {
     c.bench_function("iter chunk_refs ", |b| {
-        b.iter_with_setup(
-            || ChunksRefs::make_dummy_chunk_refs(0),
-            |i| iter_chunkrefs(i),
-        )
+        b.iter_with_setup(|| ChunksRefs::make_dummy_chunk_refs(0), iter_chunkrefs)
     });
     c.bench_function("iter chunk_refs padding ", |b| {
         b.iter_with_setup(
             || ChunksRefs::make_dummy_chunk_refs(0),
-            |i| iter_chunkrefs_padding(i),
+            iter_chunkrefs_padding,
         )
     });
     c.bench_function("iter vec", |b| {
@@ -65,7 +62,7 @@ fn criterion_benchmark(c: &mut Criterion) {
                 }
                 d
             },
-            |i| iter_vec(i),
+            iter_vec,
         )
     });
 }
